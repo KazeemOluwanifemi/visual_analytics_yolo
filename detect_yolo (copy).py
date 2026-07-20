@@ -79,16 +79,17 @@ COUNT_FILE = "count.json"
 
 if os.path.exists(COUNT_FILE):
 
-    with open(COUNT_FILE,"r") as f:
+    with open(COUNT_FILE, "r") as f:
 
-        total_count = json.load(f).get(
-            "total",
-            0
-        )
+        data = json.load(f)
+
+        entry_count = data.get("entry", 0)
+        exit_count = data.get("exit", 0)
 
 else:
 
-    total_count = 0
+    entry_count = 0
+    exit_count = 0
 
 
 
@@ -258,21 +259,24 @@ while True:
 
             if old_x < LINE_X and center_x >= LINE_X:
 
-                total_count += 1
+                entry_count += 1
 
 
             # Right to left
 
             elif old_x > LINE_X and center_x <= LINE_X:
 
-                total_count += 1
+                exit_count += 1
 
 
 
             with open(COUNT_FILE,"w") as f:
 
                 json.dump(
-                    {"total":total_count},
+                    {
+                        "entry":entry_count,
+                        "exit": exit_count
+                    },
                     f
                 )
 
@@ -335,7 +339,7 @@ while True:
 
     cv2.putText(
         frame,
-        f"Crossed: {total_count}",
+        f"Entry: {entry_count}",
         (10,80),
         cv2.FONT_HERSHEY_SIMPLEX,
         1,
@@ -343,11 +347,20 @@ while True:
         2
     )
 
+    cv2.putText(
+        frame,
+        f"Exit: {exit_count}",
+        (10,120),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        1,
+        (0,255,255),
+        2
+    )
 
     cv2.putText(
         frame,
         f"FPS: {avg_fps:.2f}",
-        (10,120),
+        (10,160),
         cv2.FONT_HERSHEY_SIMPLEX,
         1,
         (0,255,255),
@@ -378,11 +391,11 @@ cv2.destroyAllWindows()
 with open(COUNT_FILE,"w") as f:
 
     json.dump(
-        {"total":total_count},
+        {"entry":entry_count,
+         "exit": exit_count},
         f
     )
 
 
-print(
-    f"Final count: {total_count}"
-)
+print(f"Final Entry Count: {entry_count}")
+print(f"Final Exit Count: {exit_count}")
