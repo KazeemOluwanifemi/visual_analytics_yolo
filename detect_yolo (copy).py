@@ -8,6 +8,10 @@ import cv2
 import numpy as np
 from ultralytics import YOLO
 
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import db
+
 
 parser = argparse.ArgumentParser()
 
